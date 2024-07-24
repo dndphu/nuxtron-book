@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain } from "electron";
+import { app, BrowserWindow, ipcMain, dialog } from "electron";
 import path from "node:path";
 
 // The built directory structure
@@ -26,24 +26,40 @@ function createWindow() {
   win = new BrowserWindow({
     width: 1200,
     height: 800,
-    minWidth: 576,
+    minWidth: 480,
+    minHeight: 320,
     webPreferences: {
       preload: path.join(MAIN_DIST, "preload.js"),
     },
+    // show: false,
+    // frame: false,
   });
 
   if (process.env.VITE_DEV_SERVER_URL) {
     win.loadURL(process.env.VITE_DEV_SERVER_URL ?? "");
     win.webContents.openDevTools();
-
   } else {
-
     win.loadFile(path.join(process.env.VITE_PUBLIC!, "index.html"));
   }
 }
 
 function initIpc() {
   ipcMain.handle("app-start-time", () => new Date().toLocaleString());
+}
+
+function openDialog() {
+  ipcMain.handle("open-file-dialog", async () => {
+    const { canceled, filePaths } = await dialog.showOpenDialog({
+      filters: [{ name: "ePub", extensions: ["epub"] }],
+      properties: ["openFile", "multiSelections"],
+    });
+
+    if (canceled) {
+      return;
+    } else {
+      return filePaths;
+    }
+  });
 }
 
 app.on("window-all-closed", () => {
@@ -61,5 +77,6 @@ app.on("activate", () => {
 
 app.whenReady().then(() => {
   initIpc();
+  openDialog();
   createWindow();
 });

@@ -3,7 +3,7 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   ssr: false,
 
-  modules: ["nuxt-electron"],
+  modules: ["nuxt-electron", "dp-elements"],
 
   electron: {
     build: [
