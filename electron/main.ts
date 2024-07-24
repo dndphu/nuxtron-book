@@ -1,15 +1,6 @@
 import { app, BrowserWindow, ipcMain, dialog } from "electron";
 import path from "node:path";
 
-// The built directory structure
-//
-// ├─┬ dist-electron
-// │ ├─┬ main
-// │ │ └── index.js
-// │ ├─┬ preload
-// │ │ └── index.js
-// │ ├─┬ renderer
-// │ │ └── index.html
 
 process.env.APP_ROOT = path.join(__dirname, "..");
 
@@ -24,13 +15,22 @@ let win: BrowserWindow | null;
 
 function createWindow() {
   win = new BrowserWindow({
+    autoHideMenuBar: true,
+
     width: 1200,
     height: 800,
     minWidth: 480,
     minHeight: 320,
+
     webPreferences: {
+      nodeIntegration: true,
+      nodeIntegrationInWorker: false,
+      webSecurity: false,
+      experimentalFeatures: true,
+
       preload: path.join(MAIN_DIST, "preload.js"),
     },
+    // transparent: true,
     // show: false,
     // frame: false,
   });
