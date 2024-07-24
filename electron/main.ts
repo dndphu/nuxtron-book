@@ -1,6 +1,16 @@
 import { app, BrowserWindow, ipcMain } from "electron";
 import path from "node:path";
 
+// The built directory structure
+//
+// ├─┬ dist-electron
+// │ ├─┬ main
+// │ │ └── index.js
+// │ ├─┬ preload
+// │ │ └── index.js
+// │ ├─┬ renderer
+// │ │ └── index.html
+
 process.env.APP_ROOT = path.join(__dirname, "..");
 
 export const MAIN_DIST = path.join(process.env.APP_ROOT, "dist-electron");
@@ -11,30 +21,25 @@ process.env.VITE_PUBLIC = process.env.VITE_DEV_SERVER_URL
   : RENDERER_DIST;
 
 let win: BrowserWindow | null;
-const isDev = process.env.NODE_ENV === "development";
 
 function createWindow() {
   win = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 1200,
+    height: 800,
+    minWidth: 576,
     webPreferences: {
       preload: path.join(MAIN_DIST, "preload.js"),
-      nodeIntegration: true,
     },
   });
 
   if (process.env.VITE_DEV_SERVER_URL) {
-    win.loadURL(process.env.VITE_DEV_SERVER_URL);
+    win.loadURL(process.env.VITE_DEV_SERVER_URL ?? "");
     win.webContents.openDevTools();
+
   } else {
+
     win.loadFile(path.join(process.env.VITE_PUBLIC!, "index.html"));
   }
-  //  if (isDev) {
-  //    win.loadURL("http://localhost:3000");
-  //  } else {
-  //   //  win.loadFile(path.join(__dirname, "../dist/index.html"));
-  //     win.loadFile(path.join(process.env.VITE_PUBLIC!, "index.html"));
-  //  }
 }
 
 function initIpc() {

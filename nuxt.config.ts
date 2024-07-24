@@ -1,6 +1,8 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  devtools: { enabled: false },
+  devtools: { enabled: true },
+  ssr: false,
+
   modules: ["nuxt-electron"],
 
   electron: {
@@ -24,8 +26,5 @@ export default defineNuxtConfig({
     renderer: {},
   },
 
-  // #43
-  ssr: false,
-
-  compatibilityDate: "2024-07-23"
+  compatibilityDate: "2024-07-24",
 });

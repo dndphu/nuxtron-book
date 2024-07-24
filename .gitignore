@@ -12,6 +12,8 @@ node_modules
 # Logs
 logs
 *.log
+*.lock
+*.lockb
 
 # Misc
 .DS_Store
